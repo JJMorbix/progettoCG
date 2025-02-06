@@ -10,7 +10,7 @@ extern int selected_obj;
 extern vector<Mesh> Scena;
 extern Uniform uniform;
 extern LightShaderUniform light_unif;
-extern vector<vector<MeshObj>> ScenaObj;
+extern vector<Object> ScenaObj;
 
 
 void modifyModelMatrix(vec3 translation_vector, vec3 rotation_vector, GLfloat angle, GLfloat scale_factor)
@@ -117,36 +117,22 @@ void getUniform() {
 
 bool checkCollisions() {
 	vec3 pos = SetupTelecamera.position;
-	bool check = false;
+	bool check;
 	for (Mesh mesh : Scena) {
-		//printf("x: %f  , y: %f", pos.x, pos.y);
-		//printf("nome: %s \n minx: %f maxX: %f\n miny: %f maxY: %f\n minz: %f maxZ: %f\n",
-			//mesh.nome.c_str(),
-			//mesh.bbox.min.x, mesh.bbox.max.x,
-			//mesh.bbox.min.y, mesh.bbox.max.y,
-			//mesh.bbox.min.z, mesh.bbox.max.z);
 		check = (pos.x >= mesh.bbox.min.x && pos.x <= mesh.bbox.max.x) &&
 			(pos.y >= mesh.bbox.min.y && pos.y <= mesh.bbox.max.y) &&
 			(pos.z >= mesh.bbox.min.z && pos.z <= mesh.bbox.max.z);
 
-		if (check) { break; }
+		if (check) return true;
 	}
 
-	for (vector<MeshObj> tmp : ScenaObj) {
-		for (MeshObj mesh : tmp) {
-			printf("x: %f  , y: %f", pos.x, pos.y);
-			printf("nome: %s \n minx: %f maxX: %f\n miny: %f maxY: %f\n minz: %f maxZ: %f\n",
-				mesh.nome.c_str(),
-				mesh.bbox.min.x, mesh.bbox.max.x,
-				mesh.bbox.min.y, mesh.bbox.max.y,
-				mesh.bbox.min.z, mesh.bbox.max.z);
-			check = (pos.x >= mesh.bbox.min.x && pos.x <= mesh.bbox.max.x) &&
-				(pos.y >= mesh.bbox.min.y && pos.y <= mesh.bbox.max.y) &&
-				(pos.z >= mesh.bbox.min.z && pos.z <= mesh.bbox.max.z);
+	for (const auto& obj : ScenaObj) {
+		check = (pos.x >= obj.bbox.min.x && pos.x <= obj.bbox.max.x) &&
+				(pos.y >= obj.bbox.min.y && pos.y <= obj.bbox.max.y) &&
+				(pos.z >= obj.bbox.min.z && pos.z <= obj.bbox.max.z);
 
-			if (check) { break; }
-		}
+		if (check) return true;
 	}
 
-	return check;
+	return false;
 }

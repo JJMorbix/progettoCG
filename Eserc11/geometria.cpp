@@ -1,7 +1,6 @@
-#include "Strutture.h"
+#include "strutture.h"
 #include "Lib.h"
 #include "inizializzazioni.h"
-
 
 extern mat4 Projection, View;
 
@@ -16,7 +15,25 @@ void stampaMatrice(const mat4& matrice) {
 	}
 }
 
-void crea_bounding_box_obj(Object* obj){
+void crea_bounding_box_obj(Object* obj) {
+	vec3 minWorld = vec3(obj->mesh[0].Model * vec4(obj->mesh[0].vertices[0], 1.0f));
+	vec3 maxWorld = vec3(obj->mesh[0].Model * vec4(obj->mesh[0].vertices[0], 1.0f));
+		
+	for (const auto& mesh : obj->mesh) {
+		for (const auto& vertex : mesh.vertices) {
+			vec3 vert = vec3(mesh.Model * vec4(vertex, 1.0f));
+			minWorld.x = std::min(minWorld.x, vert.x);
+			minWorld.y = std::min(minWorld.y, vert.y);
+			minWorld.z = std::min(minWorld.z, vert.z);
+
+			maxWorld.x = std::max(maxWorld.x, vert.x);
+			maxWorld.y = std::max(maxWorld.y, vert.y);
+			maxWorld.z = std::max(maxWorld.z, vert.z);
+		}
+	}
+
+	obj->bbox.max = maxWorld;
+	obj->bbox.min = minWorld;
 }
 
 

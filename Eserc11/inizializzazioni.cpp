@@ -17,7 +17,7 @@ extern int width, height;
 extern string SkyboxDir;
 //extern int cubemapTexture;
 extern vector<Mesh> Scena;
-extern vector<vector<MeshObj>> ScenaObj;
+extern vector<Object> ScenaObj;
 
 extern point_light light;
 extern vector<MaterialObj> materials;
@@ -388,12 +388,19 @@ void INIT_Scene(vector<std::string> path_texture, vector<int>*texture, int* cube
     INIT_VAO(&drappo);
     Scena.push_back(drappo);
 
+    add_obj("Alien Animal.obj", vec3(-4.0, 4.0, 12.0), vec3(4.0, 4.0, 4.0), 0.0f, vec3(0.0, 1.0, 0.0), Model3D);
+    Object obj;
+    obj.mesh = Model3D;
+    crea_bounding_box_obj(&obj);
+    ScenaObj.push_back(obj);
+    clear_objModel(&Model3D);
+
     //carica modelli memorizzati in file obj e li aggiunge alla struttura ScenaObj
-    add_obj("piper_pa18.obj", vec3(-18.0, 14.0, 0.0), vec3(6.0, 6.0, 6.0), 180.0f, vec3(0.0, 1.0, 0.0), Model3D);
-    ScenaObj.push_back(Model3D);
+    /*add_obj("piper_pa18.obj", vec3(-18.0, 14.0, 0.0), vec3(6.0, 6.0, 6.0), 180.0f, vec3(0.0, 1.0, 0.0), Model3D);
 	Object obj;
 	obj.mesh = Model3D;
     crea_bounding_box_obj(&obj);
+    ScenaObj.push_back(obj);
     clear_objModel(&Model3D);
 
 
@@ -407,12 +414,8 @@ void INIT_Scene(vector<std::string> path_texture, vector<int>*texture, int* cube
     ScenaObj.push_back(Model3D);
     clear_objModel(&Model3D);
 
-    add_obj("Alien Animal.obj", vec3(-4.0, 4.0, 12.0), vec3(4.0, 4.0, 4.0), 0.0f, vec3(0.0, 1.0, 0.0), Model3D);
-    ScenaObj.push_back(Model3D);
-    clear_objModel(&Model3D);
-
     add_obj("dog.obj", vec3(-4.0, 0.0, 18.0), vec3(2.0, 2.0, 2.0), 0.0f, vec3(0.0, 1.0, 0.0), Model3D);
     ScenaObj.push_back(Model3D);
-    clear_objModel(&Model3D);
+    clear_objModel(&Model3D);*/
 
  }

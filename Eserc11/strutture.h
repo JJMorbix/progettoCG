@@ -63,10 +63,10 @@ struct  MeshObj : Mesh {
 
 
 
-typedef struct {
+struct Object {
 	vector<MeshObj> mesh;
 	BoundingBox bbox;
-} Object;
+};
 
 typedef struct {
     string name;

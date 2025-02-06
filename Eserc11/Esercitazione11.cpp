@@ -32,7 +32,7 @@ int cubemapTexture;
 //geometria della scena
 Mesh sky;
 vector<Mesh> Scena;
-vector<vector<MeshObj>> ScenaObj; //ScenaObj è una variabile che contiene una collezione di vettori dove ogni vettore contiene oggetti di tipo MeshObj
+vector<Object> ScenaObj; //ScenaObj è una variabile che contiene una collezione di vettori dove ogni vettore contiene oggetti di tipo MeshObj
  
 
 //Luci,materiali e shaders

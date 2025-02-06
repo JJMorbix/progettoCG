@@ -12,7 +12,7 @@ extern ViewSetup SetupTelecamera;
 extern PerspectiveSetup SetupProspettiva;
 extern mat4 View, projection;
 extern vector<Mesh> Scena;
-extern vector<vector<MeshObj>> ScenaObj;
+extern vector<Object> ScenaObj;
 extern Mesh sky;
 extern vector<MaterialObj> materials;
 extern point_light light;
@@ -156,29 +156,35 @@ void rendering(float currentFrame,Uniform uniform, LightShaderUniform light_unif
 
    //Rendering della ScenaObj
 
-    for (i = 0; i < ScenaObj.size(); i++) {
-
-        for (int k = 0; k < ScenaObj[i].size(); k++)
+    for (const auto& obj : ScenaObj) {
+        for (size_t i = 0; i < obj.mesh.size(); i++)
         {
+            const MeshObj* mesh = &obj.mesh[i];
 
-            glUniformMatrix4fv(uniform.MatModel, 1, GL_FALSE, value_ptr(ScenaObj[i][k].Model));
-            glUniform1i(uniform.loc_sceltaShader, ScenaObj[i][k].sceltaShader);
+            glUniformMatrix4fv(uniform.MatModel, 1, GL_FALSE, value_ptr(mesh->Model));
+            glUniform1i(uniform.loc_sceltaShader, mesh->sceltaShader);
 
             //Passo allo shader il puntatore ai materiali
-            glUniform3fv(light_unif.material_ambient, 1, value_ptr(ScenaObj[i][k].materiale.ambient));
-            glUniform3fv(light_unif.material_diffuse, 1, value_ptr(ScenaObj[i][k].materiale.diffuse));
-            glUniform3fv(light_unif.material_specular, 1, value_ptr(ScenaObj[i][k].materiale.specular));
-            glUniform1f(light_unif.material_shininess, ScenaObj[i][k].materiale.shininess);
-            glBindVertexArray(ScenaObj[i][k].VAO);
+            glUniform3fv(light_unif.material_ambient, 1, value_ptr(mesh->materiale.ambient));
+            glUniform3fv(light_unif.material_diffuse, 1, value_ptr(mesh->materiale.diffuse));
+            glUniform3fv(light_unif.material_specular, 1, value_ptr(mesh->materiale.specular));
+            glUniform1f(light_unif.material_shininess, mesh->materiale.shininess);
+            glBindVertexArray(mesh->VAO);
 
 
-            glDrawElements(GL_TRIANGLES, (ScenaObj[i][k].indices.size()) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, (mesh->indices.size() - (i == 0 ? 24 : 0)) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
 
+            if (i == 0) { // flagBbox &&
+                // Disegna la bounding box con GL_LINES
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * (mesh->indices.size() - 24)));
+
+                // Ripristina lo stato precedente
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            }
 
             glBindVertexArray(0);
         }
     }
-
-
 }
 
