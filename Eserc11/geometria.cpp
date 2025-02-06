@@ -2,11 +2,41 @@
 #include "Lib.h"
 #include "inizializzazioni.h"
 
+
+extern mat4 Projection, View;
+
+
+// Aggiungi questa funzione per stampare la matrice
+void stampaMatrice(const mat4& matrice) {
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			std::cout << matrice[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
+}
+
+void crea_bounding_box_obj(Object* obj){
+}
+
+
 void crea_bounding_box(Mesh* mesh) {
+	vec3 minWorld = vec3(mesh->Model * vec4(mesh->vertices[0], 1.0f));
+	vec3 maxWorld = vec3(mesh->Model * vec4(mesh->vertices[0], 1.0f));
+
 	vec3 min = mesh->vertices[0];
 	vec3 max = mesh->vertices[0];
 
 	for (const auto& vertex : mesh->vertices) {
+		vec3 vert = vec3(mesh->Model * vec4(vertex, 1.0f));
+		minWorld.x = std::min(minWorld.x, vert.x);
+		minWorld.y = std::min(minWorld.y, vert.y);
+		minWorld.z = std::min(minWorld.z, vert.z);
+
+		maxWorld.x = std::max(maxWorld.x, vert.x);
+		maxWorld.y = std::max(maxWorld.y, vert.y);
+		maxWorld.z = std::max(maxWorld.z, vert.z);
+
 		min.x = std::min(min.x, vertex.x);
 		min.y = std::min(min.y, vertex.y);
 		min.z = std::min(min.z, vertex.z);
@@ -43,6 +73,12 @@ void crea_bounding_box(Mesh* mesh) {
 
 	// Aggiungi gli indici della bounding box al VBO degli indici della mesh
 	mesh->indices.insert(mesh->indices.end(), bboxIndices.begin(), bboxIndices.end());
+
+	stampaMatrice(mesh->Model);
+	printf("PALLE\n");
+	mesh->bbox.max = maxWorld;
+	mesh->bbox.min = minWorld;
+
 }
 
 void crea_cubo(Mesh* mesh)
@@ -119,7 +155,6 @@ void crea_cubo(Mesh* mesh)
  
 	mesh->indices.push_back(nv-1);
 
-	crea_bounding_box(mesh);
 }
  
 void crea_piramide(Mesh* mesh)
@@ -159,7 +194,6 @@ void crea_piramide(Mesh* mesh)
 	int nv = mesh->vertices.size();
 	mesh->indices.push_back(nv-1);
 
-	crea_bounding_box(mesh);
 }
 void crea_piano(Mesh* mesh, vec4 colore)
 {
@@ -250,8 +284,6 @@ void crea_piano_suddiviso(Mesh* mesh, vec4 colore)
 	int nv = mesh->vertices.size();
 	mesh->indices.push_back(nv-1);
 
- 
-	crea_bounding_box(mesh);
 }
 
 void crea_sfera(Mesh* mesh, vec4 colore)
@@ -316,7 +348,6 @@ void crea_sfera(Mesh* mesh, vec4 colore)
 	int nv = mesh->vertices.size();
 	mesh->indices.push_back(nv-1);
 
-	crea_bounding_box(mesh);
 }
 
 void crea_toro(Mesh* mesh, vec4 colore)
@@ -378,7 +409,6 @@ void crea_toro(Mesh* mesh, vec4 colore)
 	int nv = mesh->vertices.size();
 	mesh->indices.push_back(nv - 1);
 
-	crea_bounding_box(mesh);
 }
 
 void crea_cono(Mesh* mesh, vec4 colore)
@@ -434,7 +464,6 @@ void crea_cono(Mesh* mesh, vec4 colore)
 
 	mesh->ancora_obj = (vec4(0.0, 0.0, 0.0, 1.0));
 
-	crea_bounding_box(mesh);
 }
 void crea_cilindro(Mesh* mesh, vec4 colore)
 {
@@ -487,7 +516,6 @@ void crea_cilindro(Mesh* mesh, vec4 colore)
 
 	mesh->ancora_obj = (vec4(0.0, 0.0, 0.0, 1.0));
 
-	crea_bounding_box(mesh);
 }
 
 

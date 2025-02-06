@@ -6,7 +6,6 @@
 extern GLFWwindow* window;
 extern mat4 Projection;
 extern int height, width;
- 
 extern ViewSetup SetupTelecamera;
 extern PerspectiveSetup SetupProspettiva;
 extern float cameraSpeed;

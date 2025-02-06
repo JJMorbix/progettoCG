@@ -287,6 +287,7 @@ void INIT_Scene(vector<std::string> path_texture, vector<int>*texture, int* cube
     sfera.material = MaterialType::SNOW_WHITE;
     sfera.nome = "Sfera";
     sfera.sceltaShader = GOURAD_SHADING;
+    crea_bounding_box(&sfera);
     //Genera il VAO della sfera
     INIT_VAO(&sfera);
     Scena.push_back(sfera);
@@ -301,6 +302,7 @@ void INIT_Scene(vector<std::string> path_texture, vector<int>*texture, int* cube
     piano.nome = "Piano";
     piano.sceltaShader = WAVE;
     piano.material = MaterialType::BROWN;
+    //crea_bounding_box(&piano);
     //Genera il VAO del piano
     INIT_VAO(&piano);
     Scena.push_back(piano);
@@ -314,6 +316,7 @@ void INIT_Scene(vector<std::string> path_texture, vector<int>*texture, int* cube
     cubo.nome = "Cubo";
     cubo.sceltaShader = GOURAD_SHADING;
     cubo.material = MaterialType::EMERALD;
+    crea_bounding_box(&cubo);
     //Genera il VAO del cubo
     INIT_VAO(&cubo);
     Scena.push_back(cubo);
@@ -331,6 +334,7 @@ void INIT_Scene(vector<std::string> path_texture, vector<int>*texture, int* cube
     cono.nome = "Cono";
     cono.sceltaShader = GOURAD_SHADING;
     cono.material = MaterialType::YELLOW;
+    crea_bounding_box(&cono);
     //Genera il VAO del cono
     INIT_VAO(&cono);
     Scena.push_back(cono);
@@ -348,6 +352,7 @@ void INIT_Scene(vector<std::string> path_texture, vector<int>*texture, int* cube
     //Genera il VAO del toro
     toro.nome = "Toro";
     toro.sceltaShader = GOURAD_SHADING;
+    crea_bounding_box(&toro);
     INIT_VAO(&toro);
     Scena.push_back(toro);
 
@@ -360,6 +365,7 @@ void INIT_Scene(vector<std::string> path_texture, vector<int>*texture, int* cube
     //Genera il VAO dell'asta
     asta.nome = "Asta";
     asta.sceltaShader = GOURAD_SHADING;
+    crea_bounding_box(&asta);
     INIT_VAO(&asta);
     Scena.push_back(asta);
 
@@ -378,13 +384,16 @@ void INIT_Scene(vector<std::string> path_texture, vector<int>*texture, int* cube
     drappo.sceltaShader = FLAG;
     drappo.material = MaterialType::BROWN;
     //Genera il VAO del piano
+    crea_bounding_box(&drappo);
     INIT_VAO(&drappo);
     Scena.push_back(drappo);
 
     //carica modelli memorizzati in file obj e li aggiunge alla struttura ScenaObj
     add_obj("piper_pa18.obj", vec3(-18.0, 14.0, 0.0), vec3(6.0, 6.0, 6.0), 180.0f, vec3(0.0, 1.0, 0.0), Model3D);
     ScenaObj.push_back(Model3D);
-
+	Object obj;
+	obj.mesh = Model3D;
+    crea_bounding_box_obj(&obj);
     clear_objModel(&Model3D);
 
 

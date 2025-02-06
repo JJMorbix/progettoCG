@@ -10,6 +10,9 @@ extern int selected_obj;
 extern vector<Mesh> Scena;
 extern Uniform uniform;
 extern LightShaderUniform light_unif;
+extern vector<vector<MeshObj>> ScenaObj;
+
+
 void modifyModelMatrix(vec3 translation_vector, vec3 rotation_vector, GLfloat angle, GLfloat scale_factor)
 {
 	//ricordare che mat4(1) costruisce una matrice identità di ordine 4
@@ -116,11 +119,33 @@ bool checkCollisions() {
 	vec3 pos = SetupTelecamera.position;
 	bool check = false;
 	for (Mesh mesh : Scena) {
+		//printf("x: %f  , y: %f", pos.x, pos.y);
+		//printf("nome: %s \n minx: %f maxX: %f\n miny: %f maxY: %f\n minz: %f maxZ: %f\n",
+			//mesh.nome.c_str(),
+			//mesh.bbox.min.x, mesh.bbox.max.x,
+			//mesh.bbox.min.y, mesh.bbox.max.y,
+			//mesh.bbox.min.z, mesh.bbox.max.z);
 		check = (pos.x >= mesh.bbox.min.x && pos.x <= mesh.bbox.max.x) &&
 			(pos.y >= mesh.bbox.min.y && pos.y <= mesh.bbox.max.y) &&
 			(pos.z >= mesh.bbox.min.z && pos.z <= mesh.bbox.max.z);
 
 		if (check) { break; }
+	}
+
+	for (vector<MeshObj> tmp : ScenaObj) {
+		for (MeshObj mesh : tmp) {
+			printf("x: %f  , y: %f", pos.x, pos.y);
+			printf("nome: %s \n minx: %f maxX: %f\n miny: %f maxY: %f\n minz: %f maxZ: %f\n",
+				mesh.nome.c_str(),
+				mesh.bbox.min.x, mesh.bbox.max.x,
+				mesh.bbox.min.y, mesh.bbox.max.y,
+				mesh.bbox.min.z, mesh.bbox.max.z);
+			check = (pos.x >= mesh.bbox.min.x && pos.x <= mesh.bbox.max.x) &&
+				(pos.y >= mesh.bbox.min.y && pos.y <= mesh.bbox.max.y) &&
+				(pos.z >= mesh.bbox.min.z && pos.z <= mesh.bbox.max.z);
+
+			if (check) { break; }
+		}
 	}
 
 	return check;

@@ -28,7 +28,6 @@ typedef struct {
  
 
 struct Mesh {
-
     vector<vec3> vertices;   // Vettore contenente le coordinate dei vertici della mesh
     vector<vec4> colors;  // Vettore contenente i colori associati a ciascun vertice
     vector<GLuint> indices; // Vettore contenente gli indici dei vertici che definiscono i triangoli (o altre primitive)
@@ -61,6 +60,13 @@ struct Mesh {
 struct  MeshObj : Mesh {
     MaterialObj materiale;
 };
+
+
+
+typedef struct {
+	vector<MeshObj> mesh;
+	BoundingBox bbox;
+} Object;
 
 typedef struct {
     string name;
