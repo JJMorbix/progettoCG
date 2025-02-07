@@ -15,7 +15,7 @@ extern vector<Mesh> Scena;
 extern vector<Object> ScenaObj;
 extern Mesh sky;
 extern vector<MaterialObj> materials;
-extern point_light light;
+extern vector<point_light> lights;
  
 extern unsigned int programId, programId1, programIdr;
  
@@ -76,11 +76,13 @@ void rendering(float currentFrame,Uniform uniform, LightShaderUniform light_unif
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    glUniform3f(light_unif.light_position_pointer, light.position.x, light.position.y, light.position.z);
-
-    glUniform3f(light_unif.light_color_pointer, light.color.r, light.color.g, light.color.b);
-    glUniform1f(light_unif.light_power_pointer, light.power);
+    
+    for (const auto& light : lights)
+    {
+        glUniform3f(light_unif.light_position_pointer, light.position.x, light.position.y, light.position.z);
+        glUniform3f(light_unif.light_color_pointer, light.color.r, light.color.g, light.color.b);
+        glUniform1f(light_unif.light_power_pointer, light.power);
+    }
 
     //Passo allo shader il puntatore alla posizione della camera
     glUniform3f(uniform.loc_view_pos, SetupTelecamera.position.x, SetupTelecamera.position.y, SetupTelecamera.position.z);

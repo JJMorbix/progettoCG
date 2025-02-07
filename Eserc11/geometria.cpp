@@ -4,17 +4,6 @@
 
 extern mat4 Projection, View;
 
-
-// Aggiungi questa funzione per stampare la matrice
-void stampaMatrice(const mat4& matrice) {
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			std::cout << matrice[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-}
-
 void crea_bounding_box_obj(Object* obj) {
 	vec3 minWorld = vec3(obj->mesh[0].Model * vec4(obj->mesh[0].vertices[0], 1.0f));
 	vec3 maxWorld = vec3(obj->mesh[0].Model * vec4(obj->mesh[0].vertices[0], 1.0f));
@@ -91,8 +80,6 @@ void crea_bounding_box(Mesh* mesh) {
 	// Aggiungi gli indici della bounding box al VBO degli indici della mesh
 	mesh->indices.insert(mesh->indices.end(), bboxIndices.begin(), bboxIndices.end());
 
-	stampaMatrice(mesh->Model);
-	printf("PALLE\n");
 	mesh->bbox.max = maxWorld;
 	mesh->bbox.min = minWorld;
 

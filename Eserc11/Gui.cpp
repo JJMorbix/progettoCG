@@ -22,7 +22,8 @@ bool isOverImGuiElement, value;
 extern string stringa_asse, Operazione;
 extern vector<MaterialObj> materials;
 extern vector<Shader> shaders;
-extern point_light light;
+extern vector<point_light> lights;
+
 void Initialize_IMGUI(GLFWwindow* window) {
 
     IMGUI_CHECKVERSION(); // Verifica la compatibilità della versione di ImGui
@@ -58,16 +59,24 @@ void my_interface(GLFWwindow* window)
         ImGuiWindowFlags_NoTitleBar |    //Nasconde la barra del titolo della finestra.
         ImGuiWindowFlags_NoMove          //Impedisce all'utente di spostare la finestra
     );
-     
-    ImGui::SliderFloat("position x", &light.position.x, -50.0f, 50.0f);  
-    ImGui::SliderFloat("position y", &light.position.y, -50.0f, 50.0f);  
-    ImGui::SliderFloat("position z", &light.position.z, -50.0f, 50.0f); 
+    
+    for (size_t i = 0; i < lights.size(); i++)
+    {
+        point_light& light = lights[i];
+        std::string label = "[Luce: " + std::to_string(i) + "] position x";
+        ImGui::SliderFloat(label.c_str(), &light.position.x, -50.0f, 50.0f);
+
+        label = "[Luce: " + std::to_string(i) + "] position y";
+        ImGui::SliderFloat(label.c_str(), &light.position.y, -50.0f, 50.0f);
+
+        label = "[Luce: " + std::to_string(i) + "] position z";
+        ImGui::SliderFloat(label.c_str(), &light.position.z, -50.0f, 50.0f);
+
+    }
 
     ImGui::Checkbox("Wireframe", &flagWf);
     ImGui::Checkbox("VisualizzaAncora ", &flagAncora);
     ImGui::Checkbox("BoundingBox", &flagBbox);
-
-
   
     //Apre un menu contestuale quando si clicca con il tasto destro del mouse su un'area vuota dell'interfaccia utente di ImGui.
    

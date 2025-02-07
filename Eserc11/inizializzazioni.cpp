@@ -19,7 +19,7 @@ extern string SkyboxDir;
 extern vector<Mesh> Scena;
 extern vector<Object> ScenaObj;
 
-extern point_light light;
+extern vector<point_light> lights;
 extern vector<MaterialObj> materials;
 extern vector<Shader> shaders;
 extern GLFWwindow* window;
@@ -159,9 +159,18 @@ void INIT_CAMERA_PROJECTION(void)
 void INIT_Illuminazione()
 {
     //Setup della luce
-    light.position = { 50.0, 2.0, 10.0 };
-    light.color = { 1.0,1.0,1.0 };
-    light.power = 2.f;
+    point_light light1;
+    light1.position = { 50.0, 2.0, 10.0 };
+    light1.color = { 1.0,1.0,1.0 };
+    light1.power = 2.f;
+
+    point_light light2;
+    light2.position = { -50.0, 2.0, 10.0 };
+    light2.color = { 1.0,1.0,1.0 };
+    light2.power = 3.f;
+
+    lights.push_back(light1);
+    lights.push_back(light2);
 
     //Setup dei materiali
     // Materials setup

@@ -116,7 +116,7 @@ void getUniform() {
 }
 
 bool checkCollisions() {
-	vec3 pos = SetupTelecamera.position;
+	/*vec3 pos = SetupTelecamera.position;
 	bool check;
 	for (Mesh mesh : Scena) {
 		check = (pos.x >= mesh.bbox.min.x && pos.x <= mesh.bbox.max.x) &&
@@ -132,7 +132,7 @@ bool checkCollisions() {
 				(pos.z >= obj.bbox.min.z && pos.z <= obj.bbox.max.z);
 
 		if (check) return true;
-	}
+	}*/
 
 	return false;
 }

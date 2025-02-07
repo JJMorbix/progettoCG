@@ -36,7 +36,7 @@ vector<Object> ScenaObj; //ScenaObj è una variabile che contiene una collezione 
  
 
 //Luci,materiali e shaders
-point_light light;
+vector<point_light> lights;
 vector<MaterialObj> materials;
 vector<Shader> shaders;
 
