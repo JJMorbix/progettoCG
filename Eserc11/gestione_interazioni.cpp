@@ -25,6 +25,7 @@ bool isNavigationMode = false;
  
 extern int selected_obj;
 extern vector<Mesh> Scena;
+extern vector<Object> ScenaObj;
 float raggio_sfera = 1.0;
 float amount = 0.2;
 
@@ -251,8 +252,23 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
                     }
                 }
             }
-            if (selected_obj > -1)
-                 cout <<"Oggetto selezionato"<< Scena[selected_obj].nome.c_str() << endl;
+            
+            /*for (int i = 0; i < ScenaObj.size(); i++)
+            {
+
+                float t_dist = 0.0f;
+
+                if (ray_sphere(SetupTelecamera.position, ray_wor, Scena[i].ancora_world, raggio_sfera, &t_dist))
+                {
+                    if (selected_obj == -1 || t_dist < closest_intersection)
+                    {
+
+                        selected_obj = i;
+
+                        closest_intersection = t_dist;
+                    }
+                }
+            }*/
         }
         break;
     default:

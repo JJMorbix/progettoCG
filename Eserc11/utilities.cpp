@@ -92,10 +92,19 @@ void getUniform() {
 	uniform.loc_view_pos = glGetUniformLocation(programId, "ViewPos");
 	uniform.loc_texture1 = glGetUniformLocation(programId, "id_tex1");
 	uniform.loc_texture2 = glGetUniformLocation(programId, "id_tex2");
+	
 	//location delle variabili uniformi per la gestione della luce
-	light_unif.light_position_pointer = glGetUniformLocation(programId, "light.position");
-	light_unif.light_color_pointer = glGetUniformLocation(programId, "light.color");
-	light_unif.light_power_pointer = glGetUniformLocation(programId, "light.power");
+	LightsPointer lp0;
+	lp0.light_position = glGetUniformLocation(programId, "lights[0].position");
+	lp0.light_color = glGetUniformLocation(programId, "lights[0].color");
+	lp0.light_power = glGetUniformLocation(programId, "lights[0].power");
+	light_unif.lightsPointers.push_back(lp0);
+
+	LightsPointer lp1;
+	lp1.light_position = glGetUniformLocation(programId, "lights[1].position");
+	lp1.light_color = glGetUniformLocation(programId, "lights[1].color");
+	lp1.light_power = glGetUniformLocation(programId, "lights[1].power");
+	light_unif.lightsPointers.push_back(lp1);
 
 	//location delle variabili uniformi per la gestione dei materiali
 	light_unif.material_ambient = glGetUniformLocation(programId, "material.ambient");

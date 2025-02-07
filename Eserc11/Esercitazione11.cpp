@@ -124,7 +124,7 @@ int main(void)
         my_interface(window);
                
          
-        rendering(currentFrame, uniform, light_unif,texture, cubemapTexture);
+        rendering(currentFrame, uniform, light_unif, texture, cubemapTexture);
         
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); // Renderizza i dati di disegno di ImGui
 

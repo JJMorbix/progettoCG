@@ -21,7 +21,7 @@ extern unsigned int programId, programId1, programIdr;
  
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-void rendering(float currentFrame,Uniform uniform, LightShaderUniform light_unif, vector<int>texture,  int cubemapTexture)
+void rendering(float currentFrame,Uniform uniform, LightShaderUniform light_unif, vector<int> texture,  int cubemapTexture)
 {
    
     int i, k;
@@ -77,11 +77,19 @@ void rendering(float currentFrame,Uniform uniform, LightShaderUniform light_unif
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     
-    for (const auto& light : lights)
+    std::vector<point_light> lightData(lights.size());
+
+    for (int i = 0; i < lights.size(); ++i)
     {
-        glUniform3f(light_unif.light_position_pointer, light.position.x, light.position.y, light.position.z);
-        glUniform3f(light_unif.light_color_pointer, light.color.r, light.color.g, light.color.b);
-        glUniform1f(light_unif.light_power_pointer, light.power);
+        point_light& light = lights[i];
+
+        lightData[i].position = light.position;
+        lightData[i].color = light.color;
+        lightData[i].power = light.power;
+
+        glUniform3f(light_unif.lightsPointers[i].light_position, light.position.x, light.position.y, light.position.z);
+        glUniform3f(light_unif.lightsPointers[i].light_color, light.color.r, light.color.g, light.color.b);
+        glUniform1f(light_unif.lightsPointers[i].light_power, light.power);
     }
 
     //Passo allo shader il puntatore alla posizione della camera

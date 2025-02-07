@@ -54,9 +54,10 @@ void main()
 
         //Trasformare le coordinate del vertice da elaborare (aPos) in coordinate di vista
         vec4 eyePosition = View * Model * vec4(aPos, 1.0);
+        vec3 lightingResult = vec3(0.0);
 
         PointLight light;
-        for (int i=0; i < int(LIGHT_NUM); ++i) {
+        for (int i=0; i < LIGHT_NUM; ++i) {
             light = lights[i];
 
             //Trasformiamo la posizione della luce nelle coordinate di vista
@@ -84,9 +85,10 @@ void main()
 
             vec3 specular = light.power * light.color * coseno_angolo_alfa * material.specular;
 
-            ourColor += vec4(ambient + diffuse + specular, 1.0);
+            lightingResult += ambient + diffuse + specular;
         }
 
+        ourColor = vec4(lightingResult, 1.0);
         frag_coord_st=coord_st;
     }
 

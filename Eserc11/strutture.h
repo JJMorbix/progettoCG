@@ -101,14 +101,18 @@ typedef struct {
 } point_light;
 
 typedef struct {
-	GLuint light_position_pointer;
-	GLuint light_color_pointer;
-	GLuint light_power_pointer;
-	GLuint material_diffuse;
-	GLuint material_ambient;
-	GLuint material_specular;
-	GLuint material_shininess;
-} LightShaderUniform;
+    GLuint light_position;  // Uniform location for light position
+    GLuint light_color;     // Uniform location for light color
+    GLuint light_power;     // Uniform location for light power
+} LightsPointer;
+
+struct LightShaderUniform {
+    std::vector<LightsPointer> lightsPointers;  // Array of pointers to light uniforms
+    GLuint material_diffuse;                    // Uniform location for diffuse material
+    GLuint material_ambient;                    // Uniform location for ambient material
+    GLuint material_specular;                   // Uniform location for specular material
+    GLuint material_shininess;                  // Uniform location for shininess of material
+};
 
 typedef struct
 {
