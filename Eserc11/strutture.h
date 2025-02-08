@@ -66,6 +66,8 @@ struct  MeshObj : Mesh {
 struct Object {
 	vector<MeshObj> mesh;
 	BoundingBox bbox;
+    vec4 ancora_world;
+    string nome;
 };
 
 typedef struct {
@@ -152,3 +154,8 @@ typedef struct {
     float far_plane; // Distanza del piano di clipping lontano
 } PerspectiveSetup;
 
+typedef enum {
+    NONE_OBJECT,
+    SIMPLE_OBJECT,
+    COMPLEX_OBJECT
+} ObjectType;

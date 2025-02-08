@@ -6,7 +6,6 @@ extern float clear_color[3];
 extern mat4 Projection;
 
 extern bool flagWf;
-extern bool flagAncora;
 extern bool flagBbox;
 extern ViewSetup SetupTelecamera;
 extern PerspectiveSetup SetupProspettiva;
@@ -60,8 +59,17 @@ void rendering(float currentFrame,Uniform uniform, LightShaderUniform light_unif
     glUniform3f(uniform.loc_view_posR, SetupTelecamera.position.x, SetupTelecamera.position.y, SetupTelecamera.position.z);
     glBindVertexArray(Scena[0].VAO);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-    glDrawElements(GL_TRIANGLES, (Scena[0].indices.size() - 1) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, Scena[0].indices.size() - 24, GL_UNSIGNED_INT, 0);
     
+    if (flagBbox) {
+        // Disegna la bounding box con GL_LINES
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * (Scena[0].indices.size() - 24)));
+
+        // Ripristina lo stato precedente
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
     glUseProgram(programId);
     
     //Passo al Vertex Shader il puntatore alla matrice View, che sarà associata alla variabile Uniform mat4 Projection
@@ -155,17 +163,10 @@ void rendering(float currentFrame,Uniform uniform, LightShaderUniform light_unif
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
 
-        if (flagAncora)
-        {
-            glPointSize(15.0);
-            int ind = Scena[i].indices.size() - 1;
-            glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, BUFFER_OFFSET(ind * sizeof(GLuint)));
-        }
         glBindVertexArray(0);
     }
 
-   //Rendering della ScenaObj
-
+    //Rendering della ScenaObj
     for (const auto& obj : ScenaObj) {
         for (size_t i = 0; i < obj.mesh.size(); i++)
         {
@@ -182,16 +183,7 @@ void rendering(float currentFrame,Uniform uniform, LightShaderUniform light_unif
             glBindVertexArray(mesh->VAO);
 
 
-            glDrawElements(GL_TRIANGLES, (mesh->indices.size() - (i == 0 ? 24 : 0)) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
-
-            if (i == 0) { // flagBbox &&
-                // Disegna la bounding box con GL_LINES
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * (mesh->indices.size() - 24)));
-
-                // Ripristina lo stato precedente
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            }
+            glDrawElements(GL_TRIANGLES, mesh->indices.size() * sizeof(GLuint), GL_UNSIGNED_INT, 0);
 
             glBindVertexArray(0);
         }

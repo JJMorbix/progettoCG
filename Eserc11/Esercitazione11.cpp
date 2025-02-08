@@ -26,6 +26,7 @@ int height = 1600, width = 1600;
 //Gestione Telecamera e Prospettiva
 mat4 Projection, View;
 ViewSetup SetupTelecamera;
+vec3 lastCameraPos;
 PerspectiveSetup SetupProspettiva;
 int cubemapTexture;
 
@@ -56,7 +57,6 @@ string SkyboxDir = "SkyBoxes/heart/";
 
 //Interfaccia
 bool flagWf = false;
-bool flagAncora = false;
 bool flagBbox = false;
  
 float w_up = width, h_up = height;;  //Larghezza ed altezza della finestra dopo l'aggiornamento da parte dell'utente
@@ -67,6 +67,7 @@ float cameraSpeed = 0.05;
 
 
 int selected_obj = -1;  //Variabile che contiene l'indice dell'oggetto selezionato nella scena
+ObjectType SelectedObjectType;
 
 vector<string> path_texture;
 vector <int> texture;
@@ -120,19 +121,23 @@ int main(void)
     while (!glfwWindowShouldClose(window))
     {
         float currentFrame = glfwGetTime();
-         
+
         my_interface(window);
-               
-         
+
         rendering(currentFrame, uniform, light_unif, texture, cubemapTexture);
-        
+
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); // Renderizza i dati di disegno di ImGui
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
+        lastCameraPos = SetupTelecamera.position;
+
         /* Poll for and process events */
         glfwPollEvents();
+
+        if (checkCollisions())
+            SetupTelecamera.position = lastCameraPos;
     }
 
     close_GUI();

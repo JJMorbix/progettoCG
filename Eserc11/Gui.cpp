@@ -6,15 +6,16 @@
 #include "imGui/imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 #include <math.h>
+#include "utilities.h"
 
 //Variabili di tipo extern
 extern float clear_color[3];
 extern bool flagWf;
 extern bool isNavigationMode;
 extern int selected_obj;
-extern bool flagAncora;
 extern bool flagBbox;
-extern vector<Mesh>Scena;
+extern vector<Mesh> Scena;
+extern vector<Object> ScenaObj;
 extern bool moving_trackball;
 extern int sceltaFs;
 //Variabili locali
@@ -23,6 +24,8 @@ extern string stringa_asse, Operazione;
 extern vector<MaterialObj> materials;
 extern vector<Shader> shaders;
 extern vector<point_light> lights;
+
+extern ObjectType SelectedObjectType;
 
 void Initialize_IMGUI(GLFWwindow* window) {
 
@@ -75,7 +78,6 @@ void my_interface(GLFWwindow* window)
     }
 
     ImGui::Checkbox("Wireframe", &flagWf);
-    ImGui::Checkbox("VisualizzaAncora ", &flagAncora);
     ImGui::Checkbox("BoundingBox", &flagBbox);
   
     //Apre un menu contestuale quando si clicca con il tasto destro del mouse su un'area vuota dell'interfaccia utente di ImGui.
@@ -123,7 +125,7 @@ void my_interface(GLFWwindow* window)
         //Si aggiunge un item denominato Navigazione, che, quando selezionato, mette a true la variabile booleana isNavigationMode
         
         cout <<materials[MaterialType::EMERALD].name.c_str() << endl;
-        if (ImGui::BeginMenu("Materiali")) {
+        if (SelectedObjectType == SIMPLE_OBJECT && ImGui::BeginMenu("Materiali")) {
             if (ImGui::MenuItem(materials[MaterialType::EMERALD].name.c_str())) {
                 // Azione per caricare un materiale
                 if (selected_obj > -1)
@@ -156,48 +158,38 @@ void my_interface(GLFWwindow* window)
             }
             ImGui::EndMenu();
         }
-        if (ImGui::BeginMenu("Shader")) {
+
+        if (SelectedObjectType != NONE_OBJECT && ImGui::BeginMenu("Shader")) {
             if (ImGui::MenuItem(shaders[ShaderOption::NONE].name.c_str()))
             {
-                if (selected_obj > -1)
-                    Scena[selected_obj].sceltaShader = 0;
-
+                updateShader(selected_obj, SelectedObjectType, ShaderOption::NONE);
             }
             if (ImGui::MenuItem(shaders[ShaderOption::GOURAD_SHADING].name.c_str()))
             {
-
-                if (selected_obj > -1)
-                    Scena[selected_obj].sceltaShader = 1;
-
+                updateShader(selected_obj, SelectedObjectType, ShaderOption::GOURAD_SHADING);
             }
             if (ImGui::MenuItem(shaders[ShaderOption::BLINNPHONG_SHADING].name.c_str()))
             {
-                if (selected_obj > -1)
-                    Scena[selected_obj].sceltaShader = 2;
+                updateShader(selected_obj, SelectedObjectType, ShaderOption::BLINNPHONG_SHADING);
             }
 
             if (ImGui::MenuItem(shaders[ShaderOption::PHONG_SHADING].name.c_str()))
             {
-                if (selected_obj > -1)
-                    Scena[selected_obj].sceltaShader = 3;
+                updateShader(selected_obj, SelectedObjectType, ShaderOption::PHONG_SHADING);
             }
-
 
             if (ImGui::MenuItem(shaders[ShaderOption::NO_TEXTURE].name.c_str()))
             {
-                if (selected_obj > -1)
-                    Scena[selected_obj].sceltaShader = 4;
+                updateShader(selected_obj, SelectedObjectType, ShaderOption::NO_TEXTURE);
             }
          
             if (ImGui::MenuItem(shaders[ShaderOption::WAVE].name.c_str()))
             {
-                if (selected_obj > -1)
-                    Scena[selected_obj].sceltaShader = 5;
+                updateShader(selected_obj, SelectedObjectType, ShaderOption::WAVE);
             }
             if (ImGui::MenuItem(shaders[ShaderOption::FLAG].name.c_str()))
             {
-                if (selected_obj > -1)
-                    Scena[selected_obj].sceltaShader = 6;
+                updateShader(selected_obj, SelectedObjectType, ShaderOption::FLAG);
             }
               
             ImGui::EndMenu();
@@ -225,10 +217,13 @@ void my_interface(GLFWwindow* window)
         ImGuiWindowFlags_NoBackground |  //Disabilita lo sfondo della finestra gui, rendendola trasparente.
         ImGuiWindowFlags_NoMove);
 
-     if (selected_obj >= 0 && selected_obj < Scena.size()) {
+     if (selected_obj >= 0 && (
+         (SelectedObjectType == SIMPLE_OBJECT && selected_obj < Scena.size()) ||
+         (SelectedObjectType == COMPLEX_OBJECT && selected_obj < ScenaObj.size()))) 
+     {
         ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Oggetto Selezionato:");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "%s", Scena[selected_obj].nome.c_str());
+        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "%s", (SelectedObjectType == SIMPLE_OBJECT ? Scena[selected_obj].nome.c_str() : ScenaObj[selected_obj].nome.c_str()));
         ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Operazione:");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f),"%s", Operazione.c_str());

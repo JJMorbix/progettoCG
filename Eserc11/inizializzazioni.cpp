@@ -400,6 +400,7 @@ void INIT_Scene(vector<std::string> path_texture, vector<int>*texture, int* cube
     add_obj("Alien Animal.obj", vec3(-4.0, 4.0, 12.0), vec3(4.0, 4.0, 4.0), 0.0f, vec3(0.0, 1.0, 0.0), Model3D);
     Object obj;
     obj.mesh = Model3D;
+    obj.nome = "Alieno";
     crea_bounding_box_obj(&obj);
     ScenaObj.push_back(obj);
     clear_objModel(&Model3D);

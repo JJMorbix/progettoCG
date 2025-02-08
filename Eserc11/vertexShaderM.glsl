@@ -10,6 +10,7 @@ uniform mat4 Model;
 uniform mat4 View;
 uniform vec3 ViewPos;
 uniform float time;
+
 //Struttura per la gestione di un punto luce
 struct PointLight {
 	vec3 position;
@@ -37,12 +38,14 @@ uniform Material material;
 
 float strenght = 0.1;
 out vec2 frag_coord_st;
+out vec3 fragNormal;
+out vec3 fragPosition;
 
 void main()
 {
-//Trasformazione dei vertici dalle coordinate nel sistema di riferimento dell'oggetto (apos), al sistema di riferimento del mondo (premoltiplicazione 
-// per Model) e successivamente proiettate nel cubo di centro l'origine e lato lungo 2, con x,y,z che variano tra -1 ed 1- (premoltiplicazione 
-//per la matrice Projection)
+    //Trasformazione dei vertici dalle coordinate nel sistema di riferimento dell'oggetto (apos), al sistema di riferimento del mondo (premoltiplicazione 
+    // per Model) e successivamente proiettate nel cubo di centro l'origine e lato lungo 2, con x,y,z che variano tra -1 ed 1- (premoltiplicazione 
+    //per la matrice Projection)
     ourColor = aColor; // set ourColor to the input color we got from the vertex data
 
     if (sceltaShader==0)
@@ -98,6 +101,7 @@ void main()
 
         //Trasformare le coordinate del vertice da elaborare (aPos) in coordinate di vista
         vec4 eyePosition = View * Model * vec4(aPos, 1.0);
+        vec3 lightingResult = vec3(0.0);
 
         PointLight light;
         for (int i=0; i < int(LIGHT_NUM); ++i) {
@@ -128,9 +132,10 @@ void main()
 
             vec3 specular = light.power * light.color * coseno_angolo_beta * material.specular;
 
-            ourColor += vec4(ambient + diffuse + specular, 1.0);
+            lightingResult += ambient + diffuse + specular;
         }
 
+        ourColor = vec4(lightingResult, 1.0);
         frag_coord_st=coord_st;
     }
 
@@ -138,42 +143,45 @@ void main()
     {
         gl_Position = Projection * View * Model * vec4(aPos, 1.0);
 
-        // Trasformare le coordinate del vertice da elaborare (aPos) in coordinate di vista
-        vec4 eyePosition = View * Model * vec4(aPos, 1.0);
-
-        PointLight light;
-        for (int i=0; i < int(LIGHT_NUM); ++i) {
-            light = lights[i];
-
-            // Trasformiamo la posizione della luce nelle coordinate di vista
-            vec4 eyeLightPos = View * vec4(light.position, 1.0);
-
-            // Trasformare le normali nel vertice in esame nel sistema di coordinate di vista
-            vec3 N = normalize(transpose(inverse(mat3(View * Model))) * vertexNormal);
-
-            // Calcoliamo la direzione della luce L e la direzione di vista V
-            vec3 V = normalize(ViewPos - eyePosition.xyz);
-            vec3 L = normalize((eyeLightPos - eyePosition).xyz);
-
-            // Calcolare il vettore di riflessione R della luce rispetto alla normale
-            vec3 R = reflect(-L, N); // La riflessione diretta rispetto alla normale
-
-            // Ambientale
-            vec3 ambient = strenght * light.power * material.ambient;
-
-            // Diffusa
-            float coseno_angolo_theta = max(dot(L, N), 0);
-            vec3 diffuse = light.power * light.color * coseno_angolo_theta * material.diffuse;
-
-            // Speculare
-            float coseno_angolo_beta = pow(max(dot(R, V), 0), material.shininess); // Cambia H con R per Phong
-            vec3 specular = light.power * light.color * coseno_angolo_beta * material.specular;
-
-            // Calcolo del colore finale
-            ourColor += vec4(ambient + diffuse + specular, 1.0);
-        }
-
         frag_coord_st = coord_st;
+        fragNormal = normalize(transpose(inverse(mat3(View * Model))) * vertexNormal);
+        fragPosition = (View * Model * vec4(aPos, 1.0)).xyz;
+
+        // // Trasformare le coordinate del vertice da elaborare (aPos) in coordinate di vista
+        // vec4 eyePosition = View * Model * vec4(aPos, 1.0);
+        // vec3 lightingResult = vec3(0.0);
+
+        // PointLight light;
+        // for (int i=0; i < int(LIGHT_NUM); ++i) {
+        //     light = lights[i];
+
+        //     // Trasformiamo la posizione della luce nelle coordinate di vista
+        //     vec4 eyeLightPos = View * vec4(light.position, 1.0);
+
+        //     // Trasformare le normali nel vertice in esame nel sistema di coordinate di vista
+        //     vec3 N = normalize(transpose(inverse(mat3(View * Model))) * vertexNormal);
+
+        //     // Calcoliamo la direzione della luce L e la direzione di vista V
+        //     vec3 V = normalize(ViewPos - eyePosition.xyz);
+        //     vec3 L = normalize((eyeLightPos - eyePosition).xyz);
+
+        //     // Calcolare il vettore di riflessione R della luce rispetto alla normale
+        //     vec3 R = reflect(-L, N); // La riflessione diretta rispetto alla normale
+
+        //     // Ambientale
+        //     vec3 ambient = strenght * light.power * material.ambient;
+
+        //     // Diffusa
+        //     float coseno_angolo_theta = max(dot(L, N), 0);
+        //     vec3 diffuse = light.power * light.color * coseno_angolo_theta * material.diffuse;
+
+        //     // Speculare
+        //     float coseno_angolo_beta = pow(max(dot(R, V), 0), material.shininess); // Cambia H con R per Phong
+        //     vec3 specular = light.power * light.color * coseno_angolo_beta * material.specular;
+
+        //     // Calcolo del colore finale
+        //     lightingResult += ambient + diffuse + specular;
+        // }
     }
 
     if (sceltaShader == 5) // Wave

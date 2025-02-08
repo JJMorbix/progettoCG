@@ -2,6 +2,7 @@
 
 #include "lib.h"
 #include "strutture.h"
+
 extern unsigned int programId, programId1, programIdr;
 
 extern ViewSetup SetupTelecamera;
@@ -125,23 +126,32 @@ void getUniform() {
 }
 
 bool checkCollisions() {
-	/*vec3 pos = SetupTelecamera.position;
-	bool check;
-	for (Mesh mesh : Scena) {
-		check = (pos.x >= mesh.bbox.min.x && pos.x <= mesh.bbox.max.x) &&
-			(pos.y >= mesh.bbox.min.y && pos.y <= mesh.bbox.max.y) &&
-			(pos.z >= mesh.bbox.min.z && pos.z <= mesh.bbox.max.z);
+	vec3 pos = SetupTelecamera.position;
 
-		if (check) return true;
+	for (const auto& mesh : Scena) {
+		if (pos.x < mesh.bbox.min.x || pos.x > mesh.bbox.max.x) continue;
+		if (pos.y < mesh.bbox.min.y || pos.y > mesh.bbox.max.y) continue;
+		if (pos.z < mesh.bbox.min.z || pos.z > mesh.bbox.max.z) continue;
+		return true;
 	}
 
 	for (const auto& obj : ScenaObj) {
-		check = (pos.x >= obj.bbox.min.x && pos.x <= obj.bbox.max.x) &&
-				(pos.y >= obj.bbox.min.y && pos.y <= obj.bbox.max.y) &&
-				(pos.z >= obj.bbox.min.z && pos.z <= obj.bbox.max.z);
-
-		if (check) return true;
-	}*/
+		if (pos.x < obj.bbox.min.x || pos.x > obj.bbox.max.x) continue;
+		if (pos.y < obj.bbox.min.y || pos.y > obj.bbox.max.y) continue;
+		if (pos.z < obj.bbox.min.z || pos.z > obj.bbox.max.z) continue;
+		return true;
+	}
 
 	return false;
+}
+
+void updateShader(int objIdx, int type, int newShader) {
+	if (type == 1) {
+		Scena[objIdx].sceltaShader = newShader;
+	}
+	else {
+		for (auto& mesh : ScenaObj[objIdx].mesh) {
+			mesh.sceltaShader = newShader;
+		}
+	}
 }

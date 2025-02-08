@@ -23,6 +23,7 @@ void crea_bounding_box_obj(Object* obj) {
 
 	obj->bbox.max = maxWorld;
 	obj->bbox.min = minWorld;
+	obj->ancora_world = vec4((maxWorld.x + minWorld.x) / 2, (maxWorld.y + minWorld.y) / 2, (maxWorld.z + minWorld.z) / 2, 1.0);
 }
 
 
@@ -351,7 +352,6 @@ void crea_sfera(Mesh* mesh, vec4 colore)
 
 	int nv = mesh->vertices.size();
 	mesh->indices.push_back(nv-1);
-
 }
 
 void crea_toro(Mesh* mesh, vec4 colore)

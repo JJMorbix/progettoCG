@@ -18,8 +18,8 @@ void moveCameraForward()
 	SetupTelecamera.position += SetupTelecamera.direction * cameraSpeed;
 	SetupTelecamera.target = SetupTelecamera.position + SetupTelecamera.direction;
 
-	if (checkCollisions())
-		moveCameraBack();
+	/*if (checkCollisions())
+		moveCameraBack();*/
 }
 
 void moveCameraBack()
@@ -28,8 +28,8 @@ void moveCameraBack()
 	SetupTelecamera.position -= SetupTelecamera.direction * cameraSpeed;
 	SetupTelecamera.target = SetupTelecamera.position + SetupTelecamera.direction;
 
-	if (checkCollisions())
-		moveCameraForward();
+	/*if (checkCollisions())
+		moveCameraForward();*/
 }
 
 void moveCameraLeft()
@@ -41,8 +41,8 @@ void moveCameraLeft()
 	SetupTelecamera.position -= slide_vector;
 	SetupTelecamera.target -= slide_vector;  //Questo mantiene il target allineato con la telecamera durante lo spostamento laterale.
 
-	if (checkCollisions())
-		moveCameraRight();
+	/*if (checkCollisions())
+		moveCameraRight();*/
 }
 
 void moveCameraRight()
@@ -54,8 +54,8 @@ void moveCameraRight()
 	SetupTelecamera.position += slide_vector;
 	SetupTelecamera.target += slide_vector; //Questo mantiene il target allineato con la telecamera durante lo spostamento laterale.
 
-	if (checkCollisions())
-		moveCameraLeft();
+	/*if (checkCollisions())
+		moveCameraLeft();*/
 }
 
 
@@ -68,8 +68,8 @@ void moveCameraUp()
 	SetupTelecamera.position -= upDirection;
 	SetupTelecamera.target -= upDirection;  //Questo mantiene il target allineato con la telecamera durante lo spostamento laterale.
 
-	if (checkCollisions())
-		moveCameraDown();
+	/*if (checkCollisions())
+		moveCameraDown();*/
 }
 
 void moveCameraDown()
@@ -80,8 +80,8 @@ void moveCameraDown()
 	SetupTelecamera.position += upDirection;
 	SetupTelecamera.target += upDirection; //Questo mantiene il target allineato con la telecamera durante lo spostamento laterale.
 
-	if (checkCollisions())
-		moveCameraUp();
+	/*if (checkCollisions())
+		moveCameraUp();*/
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)

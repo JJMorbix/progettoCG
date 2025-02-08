@@ -6,6 +6,7 @@
 #include "ImGui/imgui.h"
 #include "enum.h"
 #include "utilities.h"
+
 extern GLFWwindow* window;
 extern mat4 Projection;
 extern int height, width;
@@ -13,7 +14,8 @@ extern PerspectiveSetup SetupProspettiva;
 extern ViewSetup SetupTelecamera;
 extern mat4 View;
 extern float w_up, h_up;
-extern bool flagAncora;
+
+extern ObjectType SelectedObjectType;
  
 string stringa_asse, Operazione;
 
@@ -123,8 +125,6 @@ vec3 get_ray_from_mouse(float mouse_x, float mouse_y) {
 
     height = h_up;
     width = w_up;
-    cout << height << endl;
-    cout << width << endl;
     mouse_y = height - mouse_y;
 
     // mappiamo le coordinate di viewport del mouse [0,width], [0,height] in coordinate normalizzate [-1,1]  
@@ -235,6 +235,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
             vec3 ray_wor = get_ray_from_mouse(xmouse, ymouse);
 
             selected_obj = -1;
+            SelectedObjectType = NONE_OBJECT;
             float closest_intersection = 0.0f;
             for (int i = 0; i < Scena.size(); i++)
             {
@@ -247,28 +248,28 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
                     {
                         
                         selected_obj = i;
-                        
+                        SelectedObjectType = SIMPLE_OBJECT;
                         closest_intersection = t_dist;
                     }
                 }
             }
             
-            /*for (int i = 0; i < ScenaObj.size(); i++)
+            for (int i = 0; i < ScenaObj.size(); i++)
             {
 
                 float t_dist = 0.0f;
 
-                if (ray_sphere(SetupTelecamera.position, ray_wor, Scena[i].ancora_world, raggio_sfera, &t_dist))
+                if (ray_sphere(SetupTelecamera.position, ray_wor, ScenaObj[i].ancora_world, raggio_sfera, &t_dist))
                 {
                     if (selected_obj == -1 || t_dist < closest_intersection)
                     {
 
                         selected_obj = i;
-
+                        SelectedObjectType = COMPLEX_OBJECT;
                         closest_intersection = t_dist;
                     }
                 }
-            }*/
+            }
         }
         break;
     default:
