@@ -95,93 +95,13 @@ void main()
         frag_coord_st=coord_st;
     }
 
-    if (sceltaShader == 2) // Blinn-Phong
-    {
-        gl_Position = Projection * View * Model * vec4(aPos, 1.0);
-
-        //Trasformare le coordinate del vertice da elaborare (aPos) in coordinate di vista
-        vec4 eyePosition = View * Model * vec4(aPos, 1.0);
-        vec3 lightingResult = vec3(0.0);
-
-        PointLight light;
-        for (int i=0; i < int(LIGHT_NUM); ++i) {
-            light = lights[i];
-
-            //Trasformiamo la posizione della luce nelle coordinate di vista
-            vec4 eyeLightPos = View * vec4(light.position, 1.0);
-
-            //trasformare le normali nel vertice in esame nel sistema di coordinate di vista
-
-            vec3 N = normalize(transpose(inverse(mat3(View * Model))) * vertexNormal);
-            //Calcoliamo la direzione della luce L, la direzione riflessione R e di vista
-
-            vec3 V = normalize(ViewPos - eyePosition.xyz);
-            vec3 L = normalize((eyeLightPos - eyePosition).xyz);
-            vec3 H = normalize(L+V);  //Costruisce la direzione riflessa di L rispesso alla normale
-
-            //ambientale
-            vec3 ambient = strenght * light.power * material.ambient;
-
-            //diffuse
-            float coseno_angolo_theta = max(dot(L, N), 0);
-
-            vec3 diffuse = light.power * light.color * coseno_angolo_theta * material.diffuse;
-
-            //speculare
-            float coseno_angolo_beta = pow(max(dot(H, N), 0), material.shininess);
-
-            vec3 specular = light.power * light.color * coseno_angolo_beta * material.specular;
-
-            lightingResult += ambient + diffuse + specular;
-        }
-
-        ourColor = vec4(lightingResult, 1.0);
-        frag_coord_st=coord_st;
-    }
-
-    if (sceltaShader == 3) // Phong
+    if (sceltaShader == 3 || sceltaShader == 2) // Phong | BlinnPhong
     {
         gl_Position = Projection * View * Model * vec4(aPos, 1.0);
 
         frag_coord_st = coord_st;
-        fragNormal = normalize(transpose(inverse(mat3(View * Model))) * vertexNormal);
+        fragNormal = normalize(mat3(transpose(inverse(View * Model))) * vertexNormal);
         fragPosition = (View * Model * vec4(aPos, 1.0)).xyz;
-
-        // // Trasformare le coordinate del vertice da elaborare (aPos) in coordinate di vista
-        // vec4 eyePosition = View * Model * vec4(aPos, 1.0);
-        // vec3 lightingResult = vec3(0.0);
-
-        // PointLight light;
-        // for (int i=0; i < int(LIGHT_NUM); ++i) {
-        //     light = lights[i];
-
-        //     // Trasformiamo la posizione della luce nelle coordinate di vista
-        //     vec4 eyeLightPos = View * vec4(light.position, 1.0);
-
-        //     // Trasformare le normali nel vertice in esame nel sistema di coordinate di vista
-        //     vec3 N = normalize(transpose(inverse(mat3(View * Model))) * vertexNormal);
-
-        //     // Calcoliamo la direzione della luce L e la direzione di vista V
-        //     vec3 V = normalize(ViewPos - eyePosition.xyz);
-        //     vec3 L = normalize((eyeLightPos - eyePosition).xyz);
-
-        //     // Calcolare il vettore di riflessione R della luce rispetto alla normale
-        //     vec3 R = reflect(-L, N); // La riflessione diretta rispetto alla normale
-
-        //     // Ambientale
-        //     vec3 ambient = strenght * light.power * material.ambient;
-
-        //     // Diffusa
-        //     float coseno_angolo_theta = max(dot(L, N), 0);
-        //     vec3 diffuse = light.power * light.color * coseno_angolo_theta * material.diffuse;
-
-        //     // Speculare
-        //     float coseno_angolo_beta = pow(max(dot(R, V), 0), material.shininess); // Cambia H con R per Phong
-        //     vec3 specular = light.power * light.color * coseno_angolo_beta * material.specular;
-
-        //     // Calcolo del colore finale
-        //     lightingResult += ambient + diffuse + specular;
-        // }
     }
 
     if (sceltaShader == 5) // Wave

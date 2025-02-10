@@ -42,7 +42,7 @@ vector<MaterialObj> materials;
 vector<Shader> shaders;
 
 // variabili uniform per le matrici di modellazione, di vista, posizione della telecamera e scelta_shader da utilizzare.
- Uniform uniform;
+Uniform uniform;
 
  //Uniform per la gestione dell'illuminazione
 LightShaderUniform light_unif = {};
@@ -59,7 +59,7 @@ string SkyboxDir = "SkyBoxes/heart/";
 bool flagWf = false;
 bool flagBbox = false;
  
-float w_up = width, h_up = height;;  //Larghezza ed altezza della finestra dopo l'aggiornamento da parte dell'utente
+float w_up = width, h_up = height;  //Larghezza ed altezza della finestra dopo l'aggiornamento da parte dell'utente
 
 //Per la gestione dell'animazione
 float frame = 0.0;
@@ -81,7 +81,7 @@ int main(void)
     int value = INIT_GLAD_GLFW();
     
 
-    string path_texture_name = Imagedir +  "grey-cement.jpg";
+    string path_texture_name = Imagedir +  "muromattoni.jpg";
     path_texture.push_back(path_texture_name); // Aggiungiamo la stringa al vettore
     path_texture_name = Imagedir + "texture_mare.jpg";
     path_texture.push_back(path_texture_name);

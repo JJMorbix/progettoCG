@@ -67,13 +67,13 @@ void my_interface(GLFWwindow* window)
     {
         point_light& light = lights[i];
         std::string label = "[Luce: " + std::to_string(i) + "] position x";
-        ImGui::SliderFloat(label.c_str(), &light.position.x, -50.0f, 50.0f);
+        ImGui::SliderFloat(label.c_str(), &light.position.x, -300.0f, 300.0f);
 
         label = "[Luce: " + std::to_string(i) + "] position y";
-        ImGui::SliderFloat(label.c_str(), &light.position.y, -50.0f, 50.0f);
+        ImGui::SliderFloat(label.c_str(), &light.position.y, -300.0f, 300.0f);
 
         label = "[Luce: " + std::to_string(i) + "] position z";
-        ImGui::SliderFloat(label.c_str(), &light.position.z, -50.0f, 50.0f);
+        ImGui::SliderFloat(label.c_str(), &light.position.z, -300.0f, 300.0f);
 
     }
 
@@ -124,7 +124,6 @@ void my_interface(GLFWwindow* window)
     if (ImGui::BeginPopup("Opzioni")) {
         //Si aggiunge un item denominato Navigazione, che, quando selezionato, mette a true la variabile booleana isNavigationMode
         
-        cout <<materials[MaterialType::EMERALD].name.c_str() << endl;
         if (SelectedObjectType == SIMPLE_OBJECT && ImGui::BeginMenu("Materiali")) {
             if (ImGui::MenuItem(materials[MaterialType::EMERALD].name.c_str())) {
                 // Azione per caricare un materiale

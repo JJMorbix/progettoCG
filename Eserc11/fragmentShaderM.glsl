@@ -36,7 +36,7 @@ uniform Material material;
 
 uniform int sceltaShader;
 
-float strenght = 0.1;
+float strenght = 1;
 
 void main()
 {
@@ -45,7 +45,7 @@ void main()
         return;
     }
 
-    if (sceltaShader == 3) {
+    if (sceltaShader == 3) { // Phong
         vec3 N = fragNormal;
         vec3 V = normalize(ViewPos - fragPosition);
         
@@ -62,15 +62,15 @@ void main()
             vec3 R = reflect(-L, N);
 
             float lightDistance = length(light.position - fragPosition);
-            float fAtt = min(1, lights[i].power / (lightDistance * lightDistance));
+            // float fAtt = 1 / (lightDistance * lightDistance);
 
             // Diffuse
             float cosTheta = max(dot(L, N), 0.0);
-            vec3 diffuse = fAtt * light.power * cosTheta * light.color * material.diffuse;
+            vec3 diffuse = light.power * cosTheta * light.color * material.diffuse;
 
             // Speculare
             float cosAlpha = pow(max(dot(V, R), 0.0), material.shininess);
-            vec3 specular = fAtt * light.power * cosAlpha * light.color * material.specular;
+            vec3 specular = light.power * cosAlpha * light.color * material.specular;
 
             lightingResult += ambient + diffuse + specular;
         }
@@ -79,7 +79,42 @@ void main()
         return;
     }
 
-    if (sceltaShader == 1 || sceltaShader == 2 || sceltaShader == 3) {
+    if (sceltaShader == 2) { // BlinnPhong
+        vec3 N = normalize(fragNormal);
+        vec3 V = normalize(ViewPos - fragPosition);
+        
+        vec3 lightingResult = vec3(0.0);
+
+        // Ambientale
+        vec3 ambient = strenght * material.ambient;
+
+        PointLight light;
+        for (int i=0; i < LIGHT_NUM; ++i) {
+            light = lights[i];
+
+            vec3 L = normalize(light.position - fragPosition);
+            vec3 R = reflect(-L, N);
+
+            float lightDistance = length(light.position - fragPosition);
+            // float fAtt = 1 / (lightDistance * lightDistance);
+
+            // Diffuse
+            float cosTheta = max(dot(L, N), 0.0);
+            vec3 diffuse = light.power * cosTheta * light.color * material.diffuse;
+
+            // Speculare
+            vec3 H = normalize(L + V);
+            float cosAlpha = pow(max(dot(H, N), 0.0), material.shininess);
+            vec3 specular = light.power * cosAlpha * light.color * material.specular;
+
+            lightingResult += ambient + diffuse + specular;
+        }
+
+        FragColor = mix(vec4(lightingResult, 1.0), texture(id_tex1, frag_coord_st), 0.5);
+        return;
+    }
+
+    if (sceltaShader == 1  || sceltaShader == 3) {
         FragColor = mix(ourColor, texture(id_tex1, frag_coord_st), 0.5);
         return;
     }

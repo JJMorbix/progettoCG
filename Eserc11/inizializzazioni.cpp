@@ -162,7 +162,7 @@ void INIT_Illuminazione()
     point_light light1;
     light1.position = { 50.0, 2.0, 10.0 };
     light1.color = { 1.0,1.0,1.0 };
-    light1.power = 2.f;
+    light1.power = 1.f;
 
     point_light light2;
     light2.position = { -50.0, 2.0, 10.0 };
